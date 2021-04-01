@@ -1,16 +1,14 @@
 
 function func1() {
-    var celsius = 32
-    var fahrenheit = 115
-    var text1 = ' сегодня 7 градусов по цельсию и '
-    var text = ' по фаренгейту '
+    var celsius = 7
+    var fahrenheit = (9 / 5) * celsius + 32;
 
-    var temperature = (9 / 5) * fahrenheit + 32;
-    temperature = Math.floor(temperature)
+    fahrenheit = Math.floor(fahrenheit);
 
 
-    alert(text1 + temperature + text);
+    alert('Сегодня ' + celsius + 'градусов по цельсию и ' + fahrenheit + 'по фаренгейту ');
 }
+
 func1();
 
 function func2() {
