@@ -1,103 +1,101 @@
-//Ответ на задание 3:
 
-		/*var a = -1;
-		var b = 9;
-
+//1. Задание: С помощью цикла while вывести все простые числа в промежутке от 0 до 100.
         
-		if (a > 0 && b > 0){
-		x = a - b;
-        alert(x + ' если a и b положительные это их разность');
-        }
-        
+ // Массив от 1 до 100
+	let i = [];
+	let n = 1;
+while (n < 100){
 
-         else if (a < 0 && b < 0){
-			x = a * b;
-			alert (x + ' произведение этих чисел если а и b Меньше 0');
-			}
-		  else if (a > 0 && b < 0 || a < 0 && b > 0) {
-		  x = a + b;
-		  alert (x + ' если а и b разных знаков, вывести их сумму; ноль можно считать положительным числом.') ;
-		  }*/
+	n++;
+	i.push(n);
+
+}
+//Удаляем четные
+	let v = 2;
+	let c = 2;
+while (v <= 100){
+	v += c;
+		i.splice(i.indexOf(v), 1);
+}
+
+//Удаляем цифры которые делятся на нечетные
+v = 4;
+c = 3;
+while (v < 100){
+	if (v % c ===0 && i.indexOf(v) !== -1){
+		i.splice(i.indexOf(v), 1);
+	}else {
+		v++;
+	}
+}
+
+v = 6;
+c = 5;
+while (v < 100) {
+	if (v % c === 0 && i.indexOf(v) !== -1) {
+		i.splice(i.indexOf(v), 1);
+	} else {
+		v++;
+	}
+}
+
+v = 8;
+c = 7;
+while (v < 100) {
+	if (v % c === 0 && i.indexOf(v) !== -1) {
+		i.splice(i.indexOf(v), 1);
+	} else {
+		v++;
+	}
+}
+
+console.log(i + ' простые числа');
+
+
+//Задание № 2 Корзина
+
+const basketItems = ['Shirt', 'Pants', 'Vest', 'Socks', 'hat']; 
+const ItemsCost = [['Shirt', 999], ['Pants',1999], ['Vest', 2500], ['Socks', 250], ['hat', 1499]];
+
+const getItemPrice = (item, array) => {
+	const items = [];
+	const costs = [];
+	// разбиваем массив на 2 одномерных массива
+	for (let i = 0; i < array.length; i++) {
+	  items.push(array[i][0]);
+	  costs.push(array[i][1]);
+	}
+	// Получаем индекс товара в массиве с названиями товаров и возвращаем стоимость по этому индексу из массива цен
+	return costs[items.indexOf(item)];
+  };
+ 
+  const countBasketPrice = (basketArr, costArr) => {
+	let totalCost = 0;
+	for (let i = 0; i < basketArr.length; i++) {
+	  // При итерации массива корзины применяем функцию запроса стоимости одного товара.
+	  totalCost += getItemPrice(basketArr[i], costArr);
+	}
+	return totalCost;
+  };
+  console.log('Корзина: ' + basketItems);
+  console.log('Стоимости товаров: ' + ItemsCost);
+  console.log('Полная стоимость корзины: ' + countBasketPrice(basketItems, ItemsCost));
+
+console.log(basketItems +  ItemsCost);
+
+// Ответ на 3 задание *Вывести с помощью цикла for числа от 0 до 9, не используя тело цикла: 
+for (let g = 0; g <= 9; console.log('Цикл без тела {}: ' + g++)) { /* пусто */ }
+
+
+// Ответ на 4 задание Нарисовать пирамиду:
+i = [];
+n = 0;
+while (n < 20){
+	n++;
+	i.push('p');
+	console.log(i);
+}
+	
 
 
 
-
-
-//Задание № 4
-		/*a = +prompt ('Ответ на задание № 4 Начинайте вводить числа от 1 до 15');
-       
-		switch (a) {
-		case 1:
-			alert ( 'Вы ввели число: 1');
-			break;
-		case 2:
-			alert ( 'Вы ввели число: 2');
-			break;
-		case 3:
-			alert ( 'Вы ввели число: 3');
-			break;
-		case 4:
-			alert ( 'Вы ввели число: 4');
-			break;
-		case 5:
-			alert ( 'Вы ввели число: 5');
-			break;
-		case 6:
-			alert ( 'Вы ввели число: 6');
-			break;
-		case 7:
-			alert ( 'Вы ввели число: 7');
-			break;
-		case 8:
-			alert ( 'Вы ввели число: 8');
-			break;
-		case 9:
-			alert ( 'Вы ввели число: 9');
-			break;
-		case 10:
-			alert ( 'Вы ввели число: 10');
-			break;
-		case 11:
-			alert ( 'Вы ввели число: 11');
-			break;
-		case 12:
-			alert ( 'Вы ввели число: 12');
-			break;
-		case 13:
-			alert ( 'Вы ввели число: 13');
-			break;
-		case 14:
-			alert ( 'Вы ввели число: 14');
-			break;
-		case 15:
-			alert ( 'Вы ввели число: 15');
-			break;	
-		}*/
-		
-        
-        
-        
-        // Задание № 5
-        /*var a = 7;
-		var b = 8;
-
-		function addition(a, b) {
-    		return  a + b;
-            
-		}
-
-		function minus(a, b) {
-    		return a - b;
-		}
-
-		function division (a, b) {
-    		return a / b;
-		}
-
-		function multiplication (a, b) {
-    		return a * b;
-		}
-       
-
-       
-    } */
