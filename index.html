@@ -1,35 +1,33 @@
-<!DOCTYPE html>
+
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Базовый курс JavaScript•Урок № 3</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Урок 7 • Практикум</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./style.css">
+        <script type="text/javascript" src="./script.js"></script>
+    </head>
+    <body>
+        <nav>
+            <a href="index.html">Главная</a>
+        </nav>
+    <h1>Урок 7. Урок-практикум ИГРА-ЗМЕЙКА</h1>
+    <h2>Задания</h2>
+    <p>1. Добавить выход из игры: когда змейка врезается сама в себя, когда пользователь нажимает на кнопку "Сдаться".
+        Добавить подсчет очков, при съеденном яблоке.</p>
+        <p>2. Добавить подсчет очков, при съеденном яблоке.</p>
+        <div id="game" class="game">
+            <div id="score" class="score">
+                <span id="score-value" class="value">0</span>
+            </div>
+            <div id="board" class="board"></div>
+            <div id="buttons" class="buttons">
+                <button id="button-start" class="start" type="button">Начать</button>
+                <button id="button-pause" class="pause" type="button">Пауза</button>
+                <button id="button-stop" class="stop" type="button">Сдаться</button>
+            </div>
+        </div>
+    </body>
+    </html>
     
-</head>
-
-<body>
-
-    <H1>Урок 4. Объекты в JavaScript</H1>
-    <nav>
-        <a href="index.html">Главная</a>
-    </nav>
-
-    <h2>ОТВЕТЫ НА ЗАДАНИЯ</h2>
-        <h2> 1. Написать функцию, преобразующую число в объект. Передавая на вход число от 0 до 999, мы должны получить на выходе объект, в котором в соответствующих свойствах описаны единицы, десятки и сотни. Например, для числа 245 мы должны получить следующий объект: {‘единицы’: 5, ‘десятки’: 4, ‘сотни’: 2}. Если число превышает 999, необходимо выдать соответствующее сообщение с помощью console.log и вернуть пустой объект.</h2>
-        
-        <p>Решение из script.js выведено в consol.log</p>
-
-    <h2> 2. Для игры, реализованной на уроке, добавить возможность вывода хода номер n (номер задается пользователем)
-
-    <h2>3. *На базе игры, созданной на уроке, реализовать игру «Кто хочет стать миллионером?»</h2>   
-
-
-        
-      
-      <script type="text/javascript" src="./script.js"></script>
-      
-
-</body>
-
-</html>
