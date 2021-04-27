@@ -1,243 +1,523 @@
+const GAME_STATUS_STARTED = 'started';
+const GAME_STATUS_PAUSED = 'paused';
+const GAME_STATUS_STOPPED = 'stopped';
+const GAME_STATUS_DEFAULT = 'default';
 
-//ЗАДАНИЕ № 1
-console.log('Задание № 1 ОТВЕТ');
-        
-let max = 999;
-let digit = {
-  number: Math.round(Math.random() * max), /*запрос у пользователя +prompt('Введите число от 0 до 999'),*/
-  units: 0,
-  dozens: 0,
-  hundredths: 0,
-};
-if (digit.number <= 22){
-  digit.units = digit.number;
-} else if (digit.number <= 999){
-  digit.units = Math.floor(digit.number % 10);
-  digit.dozens = Math.floor(digit.number / 10 % 10);
-  digit.hundredths = Math.floor(digit.number / 100 % 10);
-} else {
-	digit.number = 0;
-	console.log('Ваше число не соответсвует диапозону от  0 до 999');
-}
-console.log(digit);
+const SNAKE_DIRECTION_UP = 'up';
+const SNAKE_DIRECTION_DOWN = 'down';
+const SNAKE_DIRECTION_LEFT = 'left';
+const SNAKE_DIRECTION_RIGHT = 'right';
 
-//ЗАДАНИЕ № 2
-console.log('Задание № 2 ОТВЕТ');
 
 /**
- * Объект с настройками игры.
- * @property {int} rowsCount Количество строк в карте.
- * @property {int} colsCount Количество колонок в карте.
+ * Объект с настройками конфигурации игры
  */
- const config = {
-    rowsCount: 10,
-    colsCount: 10,
-};
-
-/**
- * Объект игрока, здесь будут все методы и свойства связанные с ним.
- * @property {int} x Позиция по X-координате.
- * @property {int} y Позиция по Y-координате.
- */
-const player = {
-    x: 0,
-    y: 0,
-
+const config = {
     /**
-     * Двигает игрока по переданному направлению.
-     * @param {{x: int, y: int}} nextPoint Следующая точка пользователя.
+     * Размер поля.
      */
-    move(nextPoint) {
-        this.x = nextPoint.x;
-        this.y = nextPoint.y;
-    },
+    size: 20
 };
 
-let renderer = {
-    // Сюда запишем все что надо отобразить.
-    map: "",
+/**
+ * Основной объект игры.
+ */
+const game = {
+
+    score: 0,
 
     /**
-     * Отображает игру в консоли.
+     * Функция ищет HTML элемент контейнера игры на странице.
+     *
+     * @returns {HTMLElement} Возвращает HTML элемент.
+     */
+    getElement() {
+        return document.getElementById('game');
+    },
+
+    getScoreValueElement() {
+        return document.getElementById('score-value');
+    },
+
+    /**
+     * Функция выполняет старт игры.
+     */
+    start() {
+        game.setGameStatus(GAME_STATUS_STARTED);
+
+        // 
+
+        // установить начальные координаты змейки snake.seed()
+        // установить начальные координаты еды food.seed()
+
+        board.render();
+        snake.render();
+        food.render();
+    },
+
+    /**
+     * Функция выполняет паузу игры.
+     */
+    pause() {
+        game.setGameStatus(GAME_STATUS_PAUSED);
+
+        /* добавить сюда код */
+    },
+
+    /**
+     * Функция останавливает игру.
+     */
+    stop() {
+        game.setGameStatus(GAME_STATUS_STOPPED);
+
+        // newTotalScore.innerHTML = "Игра окончена";
+        // score.appendChild(newTotalScore);
+
+        /* добавить сюда код */
+
+        // alert(game.score);
+
+        alert('Игра окончена. Количество очков: ' + game.score);
+
+        // очищаем массив змейки snake.clean()
+
+
+        // очищаем массив еды food.clean()
+        // snake.clean();
+
+        // очищаем доску board.clean()
+        board.clean();
+
+        game.setGameStatus(GAME_STATUS_DEFAULT);
+
+        game.score = 0;
+        const scoreValueElement = game.getScoreValueElement();
+        scoreValueElement.innerHTML = game.score;
+
+        snake.parts = [{
+                top: 0,
+                left: 0
+            },
+            {
+                top: 0,
+                left: 1
+            },
+            {
+                top: 0,
+                left: 2
+            },
+        ]
+
+    },
+    
+
+    /**
+     * Функция выполняет передвижение змейки по полю.
+     *
+     * @param event {KeyboardEvent} Событие нажатия на клавишу.
+     */
+    move(event) {
+        let direction = null;
+
+        /* смотрим на код клавишы и
+         * устанавливаем соответсвующее направление движения */
+        switch (event.keyCode) {
+            case 38:
+                direction = SNAKE_DIRECTION_UP;
+                break;
+            case 40:
+                direction = SNAKE_DIRECTION_DOWN;
+                break;
+            case 37:
+                direction = SNAKE_DIRECTION_LEFT;
+                break;
+            case 39:
+                direction = SNAKE_DIRECTION_RIGHT;
+                break;
+            default:
+                return;
+        }
+
+        /* устанавливаем позицию для змейки
+         * и запрашиваем координаты следующей позиции */
+        snake.setDirection(direction);
+        const nextPosition = snake.getNextPosition();
+
+        const foundSnake = snake.foundPosition(nextPosition);
+
+        if (foundSnake !== -1) {
+            game.stop();
+            // stop;
+
+            return;
+        };
+
+        /* проверяем совпадает ли следующая позиция с какой-нибудь едой */
+        const foundFood = food.foundPosition(nextPosition);
+
+        /* если найден индекс еды (то есть позиция совпадает) */
+        if (foundFood !== -1) {
+            /* устанавливаем следующую позицию змейки с вторым параметром "не удалять хвост змейки",
+             * змейка съев еду вырастает на одну клетку */
+            snake.setPosition(nextPosition, false);
+
+            /* удаляем еду с поля */
+            food.removeItem(foundFood);
+
+            /* генерируем новую еду на поле */
+            food.generateItem();
+
+            /* перерендериваем еду */
+            food.render();
+
+            //game.increaseScore();
+
+            game.score += 1;
+            const scoreValueElement = game.getScoreValueElement();
+            scoreValueElement.innerHTML = game.score;
+
+        } else {
+            /* если индекс не найден, то просто устанавливаем новую координату для змейки */
+            snake.setPosition(nextPosition);
+        }
+
+        /* перерендериваем змейку */
+        snake.render();
+    },
+
+    /**
+     * Функция устанавливает текущий статус игры,
+     * раскрашивая контейнер игры в нужный цвет.
+     *
+     * @param status {GAME_STATUS_STARTED | GAME_STATUS_PAUSED | GAME_STATUS_STOPPED} Строка представляющая статус.
+     */
+    setGameStatus(status) {
+        const element = game.getElement();
+
+        // обратить внимание, как сделать красивее
+        element.classList.remove(GAME_STATUS_STARTED, GAME_STATUS_PAUSED, GAME_STATUS_STOPPED);
+        element.classList.add(status);
+    }
+
+};
+
+
+
+
+/**
+ * Объект, представляющий поле, где ползает змейка.
+ */
+const board = {
+
+    /**
+     * Функция ищет HTML элемент поля на странице.
+     *
+     * @returns {HTMLElement} Возвращает HTML элемент.
+     */
+    getElement() {
+        return document.getElementById('board');
+    },
+
+    /**
+     * Функция отрисовывает поле с клетками для игры.
      */
     render() {
-        // Цикл перебирает все строки, которые надо отобразить.
-        for (let row = 0; row < config.rowsCount; row++) {
-            // В каждой строке отображаем для каждой колонки (x - клетка, o - игрок).
-            for (let col = 0; col < config.colsCount; col++) {
-                // Проверяем, если на данной позиции должен быть и игрок, отображаем игрока, если нет - клетку.
-                if (player.y === row && player.x === col) {
-                    this.map += 'o ';
-                } else {
-                    this.map += 'x ';
-                }
-            }
-            // После того как отобразили всю строку делаем переход на следующую строку.
-            this.map += '\n';
-        }
+        const board = this.getElement();
 
-        // Выводим все что надо отобразить в игре.
-        alert(this.map);
+        /* рисуем на странице 20*20 клеток */
+        for (let i = 0; i < config.size ** 2; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+
+            /* высчитываем и записываем в data атрибуты
+             * координаты от верхней и левой границы */
+            cell.dataset.top = Math.trunc(i / config.size);
+            cell.dataset.left = i % config.size;
+
+            board.appendChild(cell);
+        }
     },
 
-    clear() {
-        // Чистим консоль.
-        console.clear();
-        // Чистим карту.
-        this.map = "";
+    clean() {
+        const cleaner = document.getElementById('board');
+        cleaner.innerHTML = "";
     }
 };
 
-let mover = {
-    /**
-     * Получает и отдает направление от пользователя.
-     * @returns {int} Возвращаем направление, введенное пользователем.
-     */
-    getDirection() {
-        // Доступные значения ввода.
-        const availableDirections = ['w', 'a', 's', 'd'];
-
-       /* while (true) {
-            // Получаем от пользователя направление.
-            let direction = prompt('Введите букву (w, a, s или d), куда вы хотите переместиться, "Отмена" для выхода.');
-            if (!direction) {
-				if (availableDirections.includes(direction)) {
-					return direction;
-				} else {
-					alert('Для перемещения необходимо ввести одну из букв w, a, s или d.');
-					continue;
-				}
-			} else {
-                return null;
-            }
-		}
-	},*/
-
-	while (true) {
-		// Получаем от пользователя направление.
-		let direction = prompt('Введите букву (w, a, s или d), куда вы хотите переместиться, "Отмена" для выхода.');
-		if (!direction) {
-			return null;
-			} 
-			if (availableDirections.includes(direction)) {
-				alert('Для перемещения необходимо ввести одну из букв w, a, s или d.');
-					continue;
-		}
-		return direction;
-	}
-},
+/**
+ * Объект, представляющий клетку на поле.
+ */
+const cells = {
 
     /**
-     * Отдает следующую точку в которой будет находиться пользователь после движения.
-     * @param {int} direction Направление движения игрока.
-     * @returns {{x: int, y: int}} Следующая позиция игрока.
+     * Функция ищет HTML элементы клеток на странице.
+     *
+     * @returns { HTMLCollectionOf.<Element>} Возвращает набор HTML элементов.
      */
-    getNextPosition(direction) {
-        // Следующая точка игрока, в самом начале в точке будут текущие координаты игрока.
-        const nextPosition = {
-            x: player.x,
-            y: player.y,
+    getElements() {
+        return document.getElementsByClassName('cell');
+    },
+
+    /**
+     * Функция задает класс для клетки по заданным координатам.
+     *
+     * @param coordinates {Array.<{top: number, left: number}>} Массив координат клеток для изменения.
+     * @param className {string} Название класса.
+     */
+    renderItems(coordinates, className) {
+        const cells = this.getElements();
+
+        /* для всех клеток на странице удаляем переданный класс */
+        for (let cell of cells) {
+            cell.classList.remove(className);
+        }
+
+        /* для заданных координат ищем клетку и добавляем класс */
+        for (let coordinate of coordinates) {
+            const cell = document.querySelector(`.cell[data-top="${coordinate.top}"][data-left="${coordinate.left}"]`);
+            cell.classList.add(className);
+        }
+    }
+};
+
+/**
+ * Объект, представляющий змейку.
+ */
+const snake = {
+
+    /**
+     * Текущее направление движение змейки.
+     * По умолчанию: направо, потому змейка при старте занимает первые три клетки.
+     */
+    direction: SNAKE_DIRECTION_RIGHT,
+
+    /**
+     * Содержит массив объектов с координатами частей тела змейки.
+     * По умолчанию: первые три клетки.
+     *
+     * NOTE: обратить внимание, как сделать красивее.
+     * Поменять порядок координат, сейчас первый элемент массива означает хвост.
+     */
+    parts: [{
+            top: 0,
+            left: 0
+        },
+        {
+            top: 0,
+            left: 1
+        },
+        {
+            top: 0,
+            left: 2
+        },
+    ],
+
+    /**
+     * Функция устанавливает направление движения.
+     *
+     * @param direction {'up' | 'down' | 'left' | 'right'} Направление движения змейки.
+     */
+    setDirection(direction) {
+        /* проверка не пытается ли пользователь пойти в противоположном направлении,
+         * например, змейка ползет вправо, а пользователь нажал стрелку влево */
+        /* обратить внимание, как сделать красивее и сократить условие */
+        if (this.direction === SNAKE_DIRECTION_UP && direction === SNAKE_DIRECTION_DOWN ||
+            this.direction === SNAKE_DIRECTION_DOWN && direction === SNAKE_DIRECTION_UP ||
+            this.direction === SNAKE_DIRECTION_LEFT && direction === SNAKE_DIRECTION_RIGHT ||
+            this.direction === SNAKE_DIRECTION_RIGHT && direction === SNAKE_DIRECTION_LEFT) {
+            return;
+        }
+
+        this.direction = direction;
+    },
+
+
+
+
+
+    foundPosition(snakePosition) {
+        const comparerFunction = function (item) {
+            return item.top === snakePosition.top && item.left === snakePosition.left;
         };
-        // Определяем направление и обновляем местоположение игрока в зависимости от направления.
-        switch (direction) {
-            case 's':
-                nextPosition.y++;
-                break;
-            case 'a':
-                nextPosition.x--;
-                break;
-            case 'd':
-                nextPosition.x++;
-                break;
-            case 'w':
-                nextPosition.y--;
-                break;
-        }
 
-        return nextPosition;
+        /* здесь происходит вызов функции comparerFunction для каждого элемента в массиве,
+         * если функция вернет true, то для этого элемента будет возвращен его индекс,
+         * если функция ни разу не вернет true, то результатом будет -1 */
+        return this.parts.findIndex(comparerFunction);
     },
-};
 
-let game = {
+
+
     /**
-     * Запускает игру.
+     * Функция считает следующую позицию головы змейки,
+     * в зависимости от текущего направления.
+     *
+     * @returns {{top: number, left: number}} Возвращает объект с координатами.
      */
-    run() {
-        // Бесконечный цикл
-        while (true) {
-            // Получаем направление от игрока.
-            const direction = mover.getDirection();
+    getNextPosition() {
+        /* получаем позицию головы змейки */
+        const position = {
+            ...this.parts[this.parts.length - 1]
+        };
 
-            // Если игрок сказал что хочет выйти, то игра заканчивается.
-            if (direction === null) {
-                alert("Игра окончена.");
-                return;
-            }
-            // Получаем следующую точку пользователя в зависимости от направления.
-            const nextPoint = mover.getNextPosition(direction);
-
-            renderer.clear();
-            player.move(nextPoint);
-            renderer.render();
-
+        /* в зависимости от текущего положения
+         * высчитываем значение от верхней и левой границы */
+        switch (this.direction) {
+            case SNAKE_DIRECTION_UP:
+                position.top -= 1;
+                break;
+            case SNAKE_DIRECTION_DOWN:
+                position.top += 1;
+                break;
+            case SNAKE_DIRECTION_LEFT:
+                position.left -= 1;
+                break;
+            case SNAKE_DIRECTION_RIGHT:
+                position.left += 1;
+                break;
         }
+
+        /* если змейка выходит за верхний или нижний край поля,
+         * то изменяем координаты на противоположную сторону,
+         * чтобы змейка выходя за границы возвращалась обратно на поле */
+        if (position.top === -1) {
+            position.top = config.size - 1;
+        } else if (position.top > config.size - 1) {
+            position.top = 0;
+        }
+
+        /* если змейка выходит за левый или правый край поля,
+         * то изменяем координаты на противоположную сторону,
+         * чтобы змейка выходя за границы возвращалась обратно на поле */
+        if (position.left === -1) {
+            position.left = config.size - 1;
+        } else if (position.left > config.size - 1) {
+            position.left = 0;
+        }
+
+        return position;
     },
 
-    // Этот метод выполняется при открытии страницы.
-    init() {
-        console.log("Ваше положение на поле в виде о.");
-        // Отображаем нашу игру.
-        renderer.render();
-        alert("Чтобы начать игру наберите game.run() и нажмите Enter.");
+    /**
+     * Функция устанавливает позицию для змейки.
+     *
+     * @param position {{top: number, left: number}} Координаты новой позиции.
+     * @param shift Флаг, указывающий, нужно ли отрезать хвост для змейки.
+     */
+    setPosition(position, shift = true) {
+        /* проверяем флаг, указывающий, нужно ли отрезать хвост для змейки,
+         * если флаг положительный, то отрезаем хвост змейки (первый элемент в массиве),
+         * чтобы длина змейки не изменилась,
+         * если флаг будет отрицательным, то при установки позиции, мы не отрезаем хвост,
+         * а значит увеличиваем змейку на одну клетку, это будет означать, что она съела еду */
+        if (shift) {
+            this.parts.shift();
+        }
+
+        /* добавляем новые координаты в конец массива (голова змейки) */
+        this.parts.push(position);
+    },
+
+    /**
+     * Функция отрисовывает змейку на поле.
+     */
+    render() {
+        cells.renderItems(this.parts, 'snake');
     }
 };
 
-game.init();
+/**
+ * Объект, представляющий еду для змейки.
+ */
+const food = {
 
-//ЗАДАНИЕ № 3
-alert("Добро пожаловать в игру «Кто хочет стать миллионером?»");
+    /**
+     * Содержит массив объектов с координатами еды на поле.
+     */
+    items: [{
+        top: 5,
+        left: 5
+    }],
 
-    let questions = [ //questionList
-      'Сколько в комнате кошек, если в каждом из четырех углов сидит по кошке, а напротив каждой кошки сидит по кошке?',
-      'Крышка стола имеет четыре угла. Один из них отпилили. Сколько углов стало?',
-      'Сколько нужно сделать распилов, что бы распилить бревно на 12 частей?',
-      'Каким числом является сумма натуральных чисел?',
-      'Сколько граней у незаточенного карандаша?',
-      'Говорят, что математика — царица всех наук, а царица математики...',
-	  'Из двух селений навстречу друг другу выехали два велосипедиста: первый со скоростью 20 км/ч, второй — 15 км/ч. Чему будет равно расстояние между ними через 2 ч после встречи?',
-      ' Условный знак для обозначения чисел — это...',
-      'Кто сказал слова: «Математику уж затем учить надо, что она ум в порядок приводит»?',
-	  'Прибор для измерения углов на местности называется...'];
+    /**
+     * Функция выполняет поиск переданных координат змейки в массиве с едой.
+     *
+     * @param snakePosition {{top: number, left: number}} Позиция головы змейки.
+     *
+     * @returns {number} Возвращает индекс найденного совпадения из массива с едой,
+     * если ничего не найдено, то -1.
+     */
+    foundPosition(snakePosition) {
+        const comparerFunction = function (item) {
+            return item.top === snakePosition.top && item.left === snakePosition.left;
+        };
 
-    let money = [1000, 5000, 10000, 'первую несгораемую сумму 50 000', 100000, 200000, 400000,
-                'вторую несгораемую сумму 800000', 1500000, 3000000]; //gain
+        /* здесь происходит вызов функции comparerFunction для каждого элемента в массиве,
+         * если функция вернет true, то для этого элемента будет возвращен его индекс,
+         * если функция ни разу не вернет true, то результатом будет -1 */
+        return this.items.findIndex(comparerFunction);
+    },
 
-    let answers = [['A: 12 B: 16 C: 4  D: 8 '],['A: 4 B: 3 C: 5 D: 6 '],['A: 11 B: 12 C: 10 D: 6'],
-                  ['A: целым B: натуральным C: положительным D: отрицательным'],['A: 5 B: 8 C: 6 D: 10'],
-                  ['A: Геометрия B: Арифметика C: Алгебра D: Тригонометрия'],['A: 70 км B: 20 км C: 0 D: 35 км'],
-				  ['A: точка B: тире C: цифра D: корень'],['A: Жириновский B: Ломоносов C: Ленин D: Аристотель'],
-                  ['A: транспортир B: астролябия C: линейка D: экер']];
-                  
-    let right = ['C','C','A','B','B','B','A','C','B','B']; //correct
+    /**
+     * Функция удаляет один элемент по индексу из массива с едой.
+     *
+     * @param foundPosition Индекс найденного элемента.
+     */
+    removeItem(foundPosition) {
+        this.items.splice(foundPosition, 1);
+    },
 
-    let a = 0;
-    let b = 1;
-    for(let i = 0; i < 10; i++) {
-    var answer = prompt('Вопрос ' + b + ': ' + questions[i]+'\r\n'+ 'Варианты ответа: \r\n' + answers[0] + '\r\n' + 'Ваш ответ?');
-    if(answer.toUpperCase() == right[0]) {
-    alert('Поздравляю вы выиграли ' + money[a] + ' рублей');
-    a++;
-    b++;
-    answers.shift(0);
-    right.shift(0);
-    }else if (money[a] >= 100000){
-    alert('Ответ неправильный. Вы выиграли ' + money[7] + ' рублей'); 
-    break;
-    }else if (money[a] >= 10000){
-    alert('Ответ неправильный. Вы выиграли ' + money[3] + ' рублей'); 
-    break;
-    }else{
-    alert('Ответ неправильный');
-    break;
+    /**
+     * Функция генерирует объект с координатами новой еды.
+     */
+    generateItem() {
+        const newItem = {
+            top: getRandomNumber(0, config.size - 1),
+            left: getRandomNumber(0, config.size - 1)
+        };
+
+        // добавить проверку нет ли у нас такого элемента
+
+        this.items.push(newItem);
+    },
+
+    /**
+     * Функция отрисовывает еду на поле.
+     */
+    render() {
+        cells.renderItems(this.items, 'food');
     }
-    }
+};
+
+/**
+ * Функция, которая выполняет инициализацию игры.
+ */
+function init() {
+    /* получаем кнопки */
+    const startButton = document.getElementById('button-start');
+    const pauseButton = document.getElementById('button-pause');
+    const stopButton = document.getElementById('button-stop');
+
+    /* добавляем обработчики клика на кнопки */
+    startButton.addEventListener('click', game.start);
+    pauseButton.addEventListener('click', game.pause);
+    stopButton.addEventListener('click', game.stop);
+
+    /* добавляем обработчик при нажатии на любую кнопку на клавиатуре,
+     * далее в методе мы будем проверять нужную нам клавишу */
+    window.addEventListener('keydown', game.move);
+}
+
+/**
+ * Функция, генерирующая случайные числа.
+ *
+ * @param min {number} Нижняя граница генерируемого числа.
+ * @param max {number} Верхняя граница генерируемого числа.
+ *
+ * @returns {number} Возвращает случайное число.
+ */
+function getRandomNumber(min, max) {
+    return Math.trunc(Math.random() * (max - min) + min);
+}
+
+window.addEventListener('load', init);
