@@ -1,0 +1,84 @@
+/*Все страницы*/
+nav {
+  display:flex;
+  justify-content: space-between;
+}
+
+/*Главная*/
+
+.gallery {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.thumbnails {
+    display: block;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    margin-left: 300px;
+}
+
+.thumbnail-1 {
+    width: 300px;
+    height: 400px;
+    background-size: cover;
+}
+.thumbnail-2 {
+    width: 300px;
+    height: 400px;
+    background-size: cover;
+}
+.thumbnail-3 {
+    width: 300px;
+    height: 400px;
+    background-size: cover;
+}
+
+.thumbnail-1:hover,
+.thumbnail-1:focus {
+  opacity: 0.15;
+  cursor: pointer;
+  outline: none;
+}
+.thumbnail-2:hover,
+.thumbnail-2:focus {
+  opacity: 0.15;
+  cursor: pointer;
+  outline: none;
+}
+.thumbnail-3:hover,
+.thumbnail-3:focus {
+  opacity: 0.15;
+  cursor: pointer;
+  outline: none;
+  background-repeat: no-repeat;
+}
+
+.titlesite {
+  text-align: center;
+}
+
+/*СТРАНИЦА 2 diving and surfacing*/
+
+/*Все страницы
+
+/*Страница № 3
+*/
+.menu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+}
+
+.menu > .container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+

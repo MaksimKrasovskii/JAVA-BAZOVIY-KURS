@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Базовый курс Java script Урок № 6 'Обработка событий в javascript'</title>
+    <link rel="stylesheet" href="./cart.css">
+    <script type="text/javascript" src="./cart.mini.js"></script>
+    <script type="text/javascript" src="./cart.js"></script>
+    
+    
+
+    
+</head>
+
+<body>
+    <nav>
+        <a href="index.html">Главная</a>
+    </nav>
+    <h2>2. Реализовать модуль корзины. Создать блок товаров и блок корзины. У каждого товара есть кнопка «Купить», при нажатии на которую происходит добавление имени и цены товара в блок корзины. Корзина должна уметь считать общую сумму заказа.</h2>
+    <div id="wrapper">
+        <div class="label-place"></div><!-- Элемент, где будет расположен ярлык корзины -->
+        <br>
+        <div class="item_box">
+            <img  src="img/11.png" alt= "product1IMG" width="500" height="400">
+          <h3 class="item_title">Iphone 11</h3>
+          <p>Цена: <span class="item_price">900</span>$</p>
+          <button class="add_item" data-id="1" data-title="Iphone 11" data-price="900" data-img="img/11.png" data-count="100500" >Добавить в корзину</button>
+        </div>
+        <div class="item_box">
+            <img src="img/6.png" alt="product2IMG" width="400" height="400">
+          <h3 class="item_title">Iphone 6S</h3>
+          <p>Цена: <span class="item_price">500</span>$</p>
+          <button class="add_item" data-id="2" data-title="Iphone 6S" data-price="500" data-img="img/6.png">Добавить в корзину</button>
+        </div>
+        <div class="item_box">
+            <img src="img/12.png" alt="product3IMG" width="500" height="300">
+          <h3 class="item_title">Iphone 12</h3>
+          <p>Цена: <span class="item_price">1200</span>$</p>
+          <button class="add_item" data-id="3" data-title="Iphone 12" data-price="1200" data-img="img/12.png">Добавить в корзину</button>
+        </div>
+      </div>
+      <p>
+        <button id="clear">Очистить корзину</button>
+        <button id="open">Открыть корзину</button>
+      </p>
+      
+
+      
+      </body>
+
+      </html>
